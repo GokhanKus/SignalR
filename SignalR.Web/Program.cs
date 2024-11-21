@@ -19,7 +19,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.MapHub<ExampleHub>("/examplehub"); 
-app.MapHub<ExampleHub>("/exampleTypeSafehub");
+app.MapHub<ExampleTypeSafeHub>("/exampleTypeSafehub");
 
 app.UseRouting();
 
