@@ -6,6 +6,9 @@
     const broadcastMessageToCallerClientMethodCall = "BroadcastMessageToCallerClient";
     const receiveMessageForCallerClient = "ReceiveMessageForCallerClient";
 
+    const broadcastMessageToOtherClientMethodCall = "BroadcastMessageToOtherClient";
+    const receiveMessageForOtherClient = "ReceiveMessageForOtherClient";
+
     const receiveCountOfAllConnectedClient = "ReceiveCountOfAllConnectedClient";
 
     const connection = new signalR.HubConnectionBuilder().withUrl("/exampleTypeSafehub").configureLogging(signalR.LogLevel.Information).build();
@@ -29,7 +32,11 @@
         console.log("(Caller) gelen mesaj", message);
     })
 
-    var span_client_count = $("#span-connected-client-count");
+    connection.on(receiveMessageForOtherClient, (message) => {
+        console.log("(Others) gelen mesaj", message);
+    })
+
+    const span_client_count = $("#span-connected-client-count");
     connection.on(receiveCountOfAllConnectedClient, (clientCount) => {
         span_client_count.text(clientCount);
         console.log("connected client count: ", clientCount);
@@ -41,5 +48,9 @@
     $("#btn-send-message-caller-client").click(function () {
         const message = "hello world";
         connection.invoke(broadcastMessageToCallerClientMethodCall, message).catch(err => console.error("hata", err))
+    })
+    $("#btn-send-message-others-client").click(function () {
+        const message = "hello world";
+        connection.invoke(broadcastMessageToOtherClientMethodCall, message).catch(err => console.error("hata", err))
     })
 })

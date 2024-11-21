@@ -12,6 +12,10 @@ public class ExampleTypeSafeHub : Hub<IExampleTypeSafeHub>
 	{
 		await Clients.Caller.ReceiveMessageForCallerClient(message);
 	}
+	public async Task BroadcastMessageToOtherClient(string message)
+	{
+		await Clients.Others.ReceiveMessageForOtherClient(message);
+	}
 	public override async Task OnConnectedAsync()
 	{
 		ConnectedClientCount++;
