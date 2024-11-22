@@ -20,6 +20,27 @@ public class ExampleTypeSafeHub : Hub<IExampleTypeSafeHub>
 	{
 		await Clients.Client(connectionId).ReceiveMessageForSpecificClient(message);
 	}
+	public async Task BroadcastMessageToGroupClient(string message, string groupName)
+	{
+		await Clients.Group(groupName).ReceiveMessageForGroupClient(message);
+	}
+	public async Task AddGroup(string groupName)
+	{
+		await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+		await Clients.Caller.ReceiveMessageForCallerClient($"{groupName} grubuna dahil oldunuz");
+		await Clients.Group(groupName).ReceiveMessageForGroupClient($"Kullanici({Context.ConnectionId}) {groupName} grubuna dahil oldu");
+
+		//await Clients.Others.ReceiveMessageForOtherClient($"Kullanici({Context.ConnectionId}) {groupName} grubuna dahil oldu");
+
+	}
+	public async Task RemoveGroup(string groupName)
+	{
+		await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+		await Clients.Caller.ReceiveMessageForCallerClient($"{groupName} grubundan ciktiniz");
+		await Clients.Group(groupName).ReceiveMessageForGroupClient($"Kullanici({Context.ConnectionId}) {groupName} grubuna dahil oldu");
+
+		//await Clients.Others.ReceiveMessageForOtherClient($"Kullanici({Context.ConnectionId}) {groupName} grubundan cikti");
+	}
 	public override async Task OnConnectedAsync()
 	{
 		ConnectedClientCount++;

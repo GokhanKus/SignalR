@@ -5,5 +5,6 @@ public interface IExampleTypeSafeHub
 	Task ReceiveMessageForCallerClient(string message);
 	Task ReceiveMessageForOtherClient(string message);
 	Task ReceiveMessageForSpecificClient(string message);
+	Task ReceiveMessageForGroupClient(string message);
 	Task ReceiveCountOfAllConnectedClient(int clientCount);
 }
