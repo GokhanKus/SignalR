@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using SignalR.Web.Models;
 
 namespace SignalR.Web.Hubs;
 public class ExampleTypeSafeHub : Hub<IExampleTypeSafeHub>
@@ -7,6 +8,10 @@ public class ExampleTypeSafeHub : Hub<IExampleTypeSafeHub>
 	public async Task BroadcastMessageToAllClient(string message)
 	{
 		await Clients.All.ReceiveMessageForAllClient(message);
+	}
+	public async Task BroadcastComplexMessageToAllClient(Product product)
+	{
+		await Clients.All.ReceiveComplexMessageForAllClient(product);
 	}
 	public async Task BroadcastMessageToCallerClient(string message)
 	{

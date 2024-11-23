@@ -5,6 +5,9 @@
     const broadcastMessageToAllClientHubMethodCall = "BroadcastMessageToAllClient";
     const receiveMessageForAllClientMethodCall = "ReceiveMessageForAllClient";
 
+    const broadcastComplexMessageToAllClientMethodCall = "BroadcastComplexMessageToAllClient";
+    const receiveComplexMessageForAllClient = "ReceiveComplexMessageForAllClient";
+
     const broadcastMessageToCallerClientMethodCall = "BroadcastMessageToCallerClient";
     const receiveMessageForCallerClient = "ReceiveMessageForCallerClient";
 
@@ -20,8 +23,7 @@
     const groupB = "GroupB";
     let currentGroupList = [];
 
-    function refreshGroupList()
-    {
+    function refreshGroupList() {
         $("#groupList").empty();
         currentGroupList.forEach(x => {
             $("#groupList").append(`<p>${x}</p>`)
@@ -32,7 +34,7 @@
 
         if (currentGroupList.includes(groupA)) return;
 
-        connection.invoke("AddGroup",groupA).then(() => {
+        connection.invoke("AddGroup", groupA).then(() => {
             currentGroupList.push(groupA);
             refreshGroupList();
         })
@@ -50,10 +52,10 @@
 
         if (currentGroupList.includes(groupB)) return;
 
-         connection.invoke("AddGroup", groupB).then(() => {
-             currentGroupList.push(groupB);
-             refreshGroupList();
-         })
+        connection.invoke("AddGroup", groupB).then(() => {
+            currentGroupList.push(groupB);
+            refreshGroupList();
+        })
     })
     $("#btn-groupB-remove").click(function () {
 
@@ -68,7 +70,7 @@
     $("#btn-groupA-send-message").click(function () {
         if (!currentGroupList.includes(groupA)) return;
         const message = "Group A mesaj";
-        connection.invoke("BroadcastMessageToGroupClient", message,groupA).catch(err => console.error("hata", err))
+        connection.invoke("BroadcastMessageToGroupClient", message, groupA).catch(err => console.error("hata", err))
         console.log("mesaj gonderildi");
     })
     $("#btn-groupB-send-message").click(function () {
@@ -95,6 +97,7 @@
     }
 
     const span_client_count = $("#span-connected-client-count");
+
     connection.on(receiveCountOfAllConnectedClient, (clientCount) => {
         span_client_count.text(clientCount);
         console.log("connected client count: ", clientCount);
@@ -103,6 +106,10 @@
     //subscribe mesaji client olarak tuket..
     connection.on(receiveMessageForAllClientMethodCall, (message) => {
         console.log("gelen mesaj", message);
+    })
+
+    connection.on(receiveComplexMessageForAllClient, (product) => {
+        console.log("(Product) gelen ürün (complex type)", product);
     })
 
     connection.on(receiveMessageForCallerClient, (message) => {
@@ -117,10 +124,17 @@
         console.log("(Specific) gelen mesaj", message);
     })
 
+
     $("#btn-send-message-all-client").click(function () {
         const message = "hello world";
         connection.invoke(broadcastMessageToAllClientHubMethodCall, message).catch(err => console.error("hata", err))
         console.log("mesaj gonderildi");
+    })
+    $("#btn-send-complex-message-all-client").click(function () {
+
+        const product = { id: 1, name: "pen 1", price: 25 };
+        connection.invoke(broadcastComplexMessageToAllClientMethodCall, product).catch(err => console.error("hata", err))
+        console.log("product mesaji gonderildi (complex type)");
     })
     $("#btn-send-message-caller-client").click(function () {
         const message = "hello world";
