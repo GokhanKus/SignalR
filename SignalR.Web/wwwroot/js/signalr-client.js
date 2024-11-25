@@ -23,6 +23,24 @@
     const groupB = "GroupB";
     let currentGroupList = [];
 
+    async function start() {
+        try {
+            await connection.start().then(() => {
+                console.log("hub ile baglanti kuruldu");
+                $("#connectionId").html(`Connection Id : ${connection.connectionId}`);
+            });
+        }
+        catch (err) {
+            console.error("hub ile baglanti kurulamadi", err)
+            setTimeout(() => start(), 3000)
+        }
+    }
+
+    connection.onclose(async () => {
+        await start(); //baglanti koparsa tekrar baglansin
+    })
+
+    start();
     function refreshGroupList() {
         $("#groupList").empty();
         currentGroupList.forEach(x => {
@@ -82,19 +100,6 @@
     connection.on("ReceiveMessageForGroupClient", (message) => {
         console.log("Gelen mesaj", message);
     })
-
-    function start() {
-        connection.start().then(() => {
-            console.log("hub ile baglanti kuruldu");
-            $("#connectionId").html(`Connection Id : ${connection.connectionId}`);
-        });
-    }
-    try {
-        start();
-    }
-    catch {
-        setTimeout(() => start(), 5000)
-    }
 
     const span_client_count = $("#span-connected-client-count");
 

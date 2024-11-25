@@ -22,6 +22,11 @@ namespace SignalR.Web.Controllers
 		{
 			return View();
 		}
+		public IActionResult Stream()
+		{
+			//bizim datalarimizin hacmi buyuk olabilir o zaman veriyi parcalayarak (chunk) ornegin 4 parca halinde clienttan hub'a gonderebiliriz buna stream denir
+			return View();
+		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
