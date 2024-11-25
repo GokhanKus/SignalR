@@ -17,6 +17,14 @@ public class ExampleTypeSafeHub : Hub<IExampleTypeSafeHub>
 			await Clients.All.ReceiveMessageAsStreamForAllClient(nameAsChunk);
 		}
 	}
+	public async Task BroadcastStreamProductToAllClient(IAsyncEnumerable<Product> productsAsChunk)
+	{
+		await foreach (var productAsChunk in productsAsChunk)
+		{
+			await Task.Delay(1000);
+			await Clients.All.ReceiveProductAsStreamForAllClient(productAsChunk);
+		}
+	}
 	public async Task BroadcastComplexMessageToAllClient(Product product)
 	{
 		await Clients.All.ReceiveComplexMessageForAllClient(product);
