@@ -26,6 +26,8 @@
     const broadcastStreamProductToAllClient = "BroadcastStreamProductToAllClient";
     const receiveProductAsStreamForAllClient = "ReceiveProductAsStreamForAllClient";
 
+    const BroadcastFromHubToClient = "BroadcastFromHubToClient";
+
     connection.on(receiveMessageAsStreamForAllClient, (name) => {
         $("#streamBox").append(`<p>${name}</p>`);
     })
@@ -52,10 +54,10 @@
     $("#btn_FromClient_ToHub2").click(function () {
 
         const productList = [
-            {id:1, name:"pen 1", price:100},
-            {id:2, name:"pen 2", price:200},
-            {id:3, name:"pen 3", price:300},
-            {id:4, name:"pen 4", price:400}
+            { id: 1, name: "pen 1", price: 100 },
+            { id: 2, name: "pen 2", price: 200 },
+            { id: 3, name: "pen 3", price: 300 },
+            { id: 4, name: "pen 4", price: 400 }
         ];
 
         const subject = new signalR.Subject();
@@ -69,6 +71,10 @@
         subject.complete();
     })
 
+    $("#btn_FromHub_ToClient").click(function () {
 
-
+        connection.stream(BroadcastFromHubToClient, 5).subscribe({
+            next: (message) => $("#streamBox").append(`<p>${message}</p>`)
+        })
+    })
 })
