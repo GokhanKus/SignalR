@@ -7,8 +7,9 @@
 <h1>ProductList</h1>
 
 <p>
-	<a asp-action="Create">Create New</a>
+	<a href="#" class="btn btn-primary" id="btn-create-excel">Create Excel</a>
 </p>
+
 <table class="table">
 	<thead>
 		<tr>
@@ -41,3 +42,7 @@
 		}
 	</tbody>
 </table>
+
+@section Scripts{
+	<script src="~/js/toastmessage.js"></script>
+}
