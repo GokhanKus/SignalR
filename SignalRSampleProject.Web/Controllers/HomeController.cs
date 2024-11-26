@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
@@ -5,11 +6,13 @@ using NuGet.Packaging.Signing;
 using NuGet.Protocol;
 using SignalRSampleProject.Web.Models;
 using SignalRSampleProject.Web.Models.ViewModels;
+using SignalRSampleProject.Web.Services;
 using System.Diagnostics;
 
 namespace SignalRSampleProject.Web.Controllers
 {
-	public class HomeController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, AppDbContext context) : Controller
+	public class HomeController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager,
+		AppDbContext context, FileService fileService) : Controller
 	{
 		public IActionResult Index()
 		{
@@ -70,7 +73,7 @@ namespace SignalRSampleProject.Web.Controllers
 		public async Task<IActionResult> ProductList()
 		{
 			var user = await userManager.FindByEmailAsync("info@gokhankus.com");
-			
+
 			if (context.Products.Any(x => x.UserId == user!.Id)) //user'imiza ait product varsa
 			{
 				var products = context.Products.Where(x => x.UserId == user!.Id).ToList(); //o user'a ait product'lari getir
@@ -92,6 +95,18 @@ namespace SignalRSampleProject.Web.Controllers
 
 			return View(productList);
 		}
+
+		[Authorize]
+		[HttpGet]
+		public async Task<IActionResult> CreateExcel()
+		{
+			var response = new
+			{
+				Status = await fileService.AddMessageToQueue()
+			};
+			return Json(response);
+		}
+
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
