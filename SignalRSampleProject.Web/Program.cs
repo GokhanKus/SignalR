@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using SignalRSampleProject.Web.BackgroundServices;
+using SignalRSampleProject.Web.Hubs;
 using SignalRSampleProject.Web.Models;
 using SignalRSampleProject.Web.Services;
 using System.Threading.Channels;
@@ -24,6 +25,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkSto
 
 builder.Services.AddHostedService<CreateExcelBackgroundService>();
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -34,6 +37,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.MapHub<AppHub>("/hub");
 
 app.UseRouting();
 app.UseAuthorization();

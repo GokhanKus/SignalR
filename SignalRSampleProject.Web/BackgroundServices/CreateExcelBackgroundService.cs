@@ -1,5 +1,8 @@
 ﻿using ClosedXML.Excel;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.VisualBasic;
+using SignalRSampleProject.Web.Hubs;
 using SignalRSampleProject.Web.Models;
 using System.Data;
 using System.Threading.Channels;
@@ -30,6 +33,13 @@ public class CreateExcelBackgroundService(Channel<(string userId, List<Product> 
 
 			await using var excelFileStream = new FileStream(newExcelFilePath, FileMode.Create);
 			wb.SaveAs(excelFileStream);
+
+			using (var scope = serviceProvider.CreateScope())
+			{
+				var myHub = scope.ServiceProvider.GetRequiredService<IHubContext<AppHub>>();
+				await myHub.Clients.User(userId).SendAsync("AlertCompleteFile", $"/files/{newExcelFileName}", stoppingToken);
+			}
+
 		}
 	}
 	private DataTable GetTable(string tableName, List<Product> products)
