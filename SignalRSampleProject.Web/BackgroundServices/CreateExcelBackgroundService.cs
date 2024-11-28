@@ -1,7 +1,6 @@
 ﻿using ClosedXML.Excel;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.VisualBasic;
 using SignalRSampleProject.Web.Hubs;
 using SignalRSampleProject.Web.Models;
 using System.Data;
@@ -16,6 +15,9 @@ public class CreateExcelBackgroundService(Channel<(string userId, List<Product> 
 	{
 		while (await channel.Reader.WaitToReadAsync(stoppingToken)) //queue'da mesajlari oku bitince burada bekler mesaj gelince tekrar okumaya devam eder
 		{
+
+			await Task.Delay(4000);
+
 			var (userId, products) = await channel.Reader.ReadAsync(stoppingToken);
 
 			var wwwrootFolder = fileProvider.GetDirectoryContents("wwwroot");

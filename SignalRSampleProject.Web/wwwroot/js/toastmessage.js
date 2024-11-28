@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-
     $("#btn-create-excel").click(function () {
 
         $.ajax({
@@ -8,21 +7,18 @@
             dataType: "json",
             success: function (data) {
 
-                $(".toast-body").html("Excel olusturma istegi alinmistir, tamamlandiginda bilgilendirileceksiniz");
+                $(".toast-body").html("Excel oluşturma isteği alınmıştır. Tamamlandığında bilgilendirileceksiniz.");
 
                 $("#liveToast").show();
 
-               toastTimeOut = setTimeout(() => {
-
+                toastTimeOut = setTimeout(() => {
                     $("#liveToast").hide();
-
                 }, 3000)
+
             },
             error: function (err) {
-                console.error(err);
+                alert("Excel dosyasını indirebilmeniz için üye olmanız gerekmektedir.")
             }
         })
-
     })
-
-})
+});
