@@ -4,7 +4,8 @@ using SignalRSampleProject.Web.Models;
 using System.Threading.Channels;
 
 namespace SignalRSampleProject.Web.Services;
-public class FileService(AppDbContext context, IHttpContextAccessor httpContextAccessor, UserManager<IdentityUser> userManager,Channel<(string,List<Product>)> channel)
+public class FileService(AppDbContext context, IHttpContextAccessor httpContextAccessor, UserManager<IdentityUser> userManager,
+	Channel<(string userId,List<Product>products)> channel)
 {
 	public async Task<bool> AddMessageToQueue()
 	{
